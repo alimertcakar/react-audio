@@ -9,12 +9,15 @@ interface Props {
 
 export default function AudioPlayer({ url, id, context }: Props): ReactElement {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [track, setTrack] = useState(null);
+  const [track] = useState(new Audio(process.env.PUBLIC_URL + url));
   const { currentTrack, setCurrentTrack } = useContext(context);
 
   useEffect(() => {
-    setTrack(new Audio(process.env.PUBLIC_URL + url));
-    return () => {};
+    return () => {
+      track.pause();
+      track.load();
+      track.currentTime = 0;
+    };
   }, []);
 
   const playHandler = () => {
@@ -23,14 +26,11 @@ export default function AudioPlayer({ url, id, context }: Props): ReactElement {
       track.load();
       track.currentTime = 0;
       setIsPlaying(false);
-    } else if (currentTrack === id) {
+    } else {
       setCurrentTrack(id);
       playAudio();
       setIsPlaying(true);
-    } else {
-      setCurrentTrack(id);
     }
-    console.log(isPlaying);
   };
 
   const playAudio = () => {
