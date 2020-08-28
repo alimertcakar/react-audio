@@ -7,13 +7,16 @@ import React, {
   useRef,
 } from "react";
 
-export default function AudioPlayer({ url, id, context }): ReactElement {
+export default React.memo(function AudioPlayer({ url, id, context }): ReactElement {
   const [isPlaying, setIsPlaying] = useState(false);
   const player = useRef();
   const { currentTrack, setCurrentTrack } = useContext(context);
-  if (currentTrack !== id) {
-    player.current.pause();
-  }
+  useEffect(()=>{if (currentTrack !== id) {
+    player.current.pause()
+  }else{player.current.play()}},[])
+  
+  
+  
 
   const onPlay = () => {
     setCurrentTrack(id);
@@ -31,4 +34,4 @@ export default function AudioPlayer({ url, id, context }): ReactElement {
       ref={player}
     ></audio>
   );
-}
+});

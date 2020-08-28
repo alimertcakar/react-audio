@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useEffect, createContext, useState } from "react";
 import Audio from "./Audio/AudioPlayer.component";
 
