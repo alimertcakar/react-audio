@@ -7,17 +7,14 @@ interface Props {
   context: any;
 }
 
-export default React.memo(function AudioPlayer({
-  url,
-  id,
-  context,
-}: Props): ReactElement {
-  const [isPlaying, setIsPlaying] = useState(null);
+export default function AudioPlayer({ url, id, context }: Props): ReactElement {
+  const [isPlaying, setIsPlaying] = useState(false);
   const [track, setTrack] = useState(null);
   const { currentTrack, setCurrentTrack } = useContext(context);
 
   useEffect(() => {
     setTrack(new Audio(process.env.PUBLIC_URL + url));
+    return () => {};
   }, []);
 
   const playHandler = () => {
@@ -26,9 +23,12 @@ export default React.memo(function AudioPlayer({
       track.load();
       track.currentTime = 0;
       setIsPlaying(false);
-    } else {
+    } else if (currentTrack === id) {
       setCurrentTrack(id);
       playAudio();
+      setIsPlaying(true);
+    } else {
+      setCurrentTrack(id);
     }
     console.log(isPlaying);
   };
@@ -49,7 +49,8 @@ export default React.memo(function AudioPlayer({
 
   return (
     <div>
-      <button onClick={playHandler}>play</button>
+      <button onClick={playHandler}>play-{currentTrack}</button>
+      isPlaying:{isPlaying.toString()}
     </div>
   );
-});
+}

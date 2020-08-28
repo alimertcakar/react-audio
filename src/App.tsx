@@ -21,7 +21,7 @@ function App() {
             ></Audio>
           );
         })}
-        <button onClick={() => setCurrentTrack(5)}>x</button>
+        <button onClick={() => setCurrentTrack(2)}>x</button>
       </AudioContext.Provider>
     </div>
   );
