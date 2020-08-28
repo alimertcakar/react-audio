@@ -1,25 +1,34 @@
 // @ts-nocheck
-import React, { ReactElement, useEffect, useState, useContext, useRef } from "react";
+import React, {
+  ReactElement,
+  useEffect,
+  useState,
+  useContext,
+  useRef,
+} from "react";
 
+export default function AudioPlayer({ url, id, context }): ReactElement {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const player = useRef();
+  const { currentTrack, setCurrentTrack } = useContext(context);
+  if (currentTrack !== id) {
+    player.current.pause();
+  }
 
-export default function AudioPlayer({ url,id,context }): ReactElement {
-    const [isPlaying, setIsPlaying] = useState(false);
-    let canPlay = false;
-    const player = useRef();
-    const { currentTrack, setCurrentTrack } = useContext(context);
-
-    const onPlay = () =>{
-         player.current.pause();
-        setCurrentTrack(id);
-        setIsPlaying(true);
-    }
-    const onPause = () =>{
-      //track.currentTime = 0;
-      setIsPlaying(false);
-    }
+  const onPlay = () => {
+    setCurrentTrack(id);
+    setIsPlaying(true);
+  };
+  const onPause = () => {
+    setIsPlaying(false);
+  };
   return (
-    <audio src={url} controls onPlay={onPlay} onPause={onPause} ref={player}>
-     
-    </audio>
+    <audio
+      src={url}
+      controls
+      onPlay={onPlay}
+      onPause={onPause}
+      ref={player}
+    ></audio>
   );
 }
