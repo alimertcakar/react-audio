@@ -1,27 +1,36 @@
 // @ts-nocheck
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState, useContext } from "react";
 
 interface Props {
   url: string;
+  id: number;
+  context: any;
 }
 
-export default function AudioPlayer({ url }: Props): ReactElement {
-  let [isPlaying, setIsPlaying] = useState(false);
-  let [track, setTrack] = useState(null);
+export default React.memo(function AudioPlayer({
+  url,
+  id,
+  context,
+}: Props): ReactElement {
+  const [isPlaying, setIsPlaying] = useState(null);
+  const [track, setTrack] = useState(null);
+  const { currentTrack, setCurrentTrack } = useContext(context);
 
   useEffect(() => {
     setTrack(new Audio(process.env.PUBLIC_URL + url));
-    return () => {};
   }, []);
 
   const playHandler = () => {
-    setIsPlaying(!isPlaying);
     if (isPlaying) {
       track.pause();
+      track.load();
       track.currentTime = 0;
+      setIsPlaying(false);
     } else {
+      setCurrentTrack(id);
       playAudio();
     }
+    console.log(isPlaying);
   };
 
   const playAudio = () => {
@@ -29,10 +38,10 @@ export default function AudioPlayer({ url }: Props): ReactElement {
     if (audioPromise !== undefined) {
       audioPromise
         .then((_) => {
-          // autoplay started
+          setIsPlaying(true);
         })
         .catch((err) => {
-          // catch dom exception
+          setIsPlaying(false);
           console.info(err);
         });
     }
@@ -43,4 +52,4 @@ export default function AudioPlayer({ url }: Props): ReactElement {
       <button onClick={playHandler}>play</button>
     </div>
   );
-}
+});
