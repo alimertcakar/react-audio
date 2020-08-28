@@ -1,5 +1,5 @@
 import React, { useEffect, createContext, useState } from "react";
-import Audio from "./Audio/Audio.component";
+import Audio from "./Audio/AudioPlayer.component";
 
 function App() {
   const [currentTrack, setCurrentTrack] = useState(0);
@@ -9,19 +9,18 @@ function App() {
 
   return (
     <div>
-      Hello
+      currentTrack{currentTrack}
       <AudioContext.Provider value={value}>
         {tracks.map((track, index) => {
           return (
             <Audio
               url={track}
+              key={index}
               id={index}
               context={AudioContext}
-              key={index}
             ></Audio>
           );
         })}
-        <button onClick={() => setCurrentTrack(2)}>x</button>
       </AudioContext.Provider>
     </div>
   );
